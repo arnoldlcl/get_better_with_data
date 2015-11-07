@@ -71,7 +71,7 @@ genpay_th <- fread("CMS 2014/CMS 2014 General Payments Details.csv",
 genpay_th <- genpay_th[Teaching_Hospital_ID != "", ]
 
 # Write the teaching hospital info table to disk
-write.csv(genpay_th, "CMS 2014 General Payments Details - Teaching Hospitals Info.csv")
+write.csv(genpay_th, "CMS 2014 General Payments Details - Teaching Hospitals Info.csv", row.names = FALSE)
 rm(genpay_th)
 
 # This table provides information about the financial transactions themselves
@@ -90,7 +90,7 @@ genpay_trans <- fread("CMS 2014/CMS 2014 General Payments Details.csv",
                                      rep("NULL", 24), rep("character", 5), rep("NULL", 10), 
                                      "character", rep("NULL", 19)))
 
-# Ad hoc function to write genpay_trans to a new .csv file, in chunks
+# Ad hoc function to write genpay_trans and genpay_manuGPO to a new .csv file, in chunks
 
 write_genpay2 <- function(d) {
   for(i in 0:107) {
@@ -102,3 +102,54 @@ write_genpay2 <- function(d) {
 }
 
 write_genpay2(genpay_trans)
+
+# This table provides information about manufacturers and Group Purchasing Organizations (GPOs) per
+# transaction
+
+# Submitting_Applicable_Manufacturer_or_Applicable_GPO_Name: Manufacturer/GPO who submitted payment
+# Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_ID: ID of Manufacturer/GPO who made payment
+# Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_Name
+# Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_State
+# Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_Country
+
+genpay_manuGPO <- fread("CMS 2014/CMS 2014 General Payments Details.csv", 
+                        colClasses = c(rep("NULL", 23), rep("character", 5), 
+                                       rep("NULL", 15), "character", rep("NULL", 19)))
+
+write_genpay3 <- function(d) {
+  for(i in 0:107) {
+    write.table(d[((i * 100000) + 1):((i + 1) * 100000)], 
+                "CMS 2014 General Payments Details - Manufacturer and GPO Info.csv", append = TRUE, sep = ",", row.names = FALSE)
+  }
+  write.table(d[10800001:10818054, ], 
+              "CMS 2014 General Payments Details - Manufacturer and GPO Info.csv", append = TRUE, sep = ",", row.names = FALSE)
+}
+
+write_genpay3(genpay_manuGPO)
+
+# Table of physicians and state licenses
+
+genpay_license <- fread("CMS 2014/CMS 2014 General Payments Details.csv", 
+                        colClasses = c(rep("NULL", 3), "character", rep("NULL", 14), 
+                                       rep("character", 5), rep("NULL", 40)))
+
+genpay_license <- unique(genpay_license)
+
+write.csv(genpay_license, "CMS 2014 General Payments Details - License Info.csv", row.names = FALSE)
+
+# Table of product information associated with each financial transaction
+
+genpay_prod <- fread("CMS 2014/CMS 2014 General Payments Details.csv",
+                     colClasses = c(rep("NULL", 43), "character", "NULL", rep("character", 16), 
+                                    rep("NULL", 2)))
+
+write_genpay4 <- function(d) {
+  for(i in 0:107) {
+    write.table(d[((i * 100000) + 1):((i + 1) * 100000)], 
+                "CMS 2014 General Payments Details - Product Info.csv", append = TRUE, sep = ",", row.names = FALSE)
+  }
+  write.table(d[10800001:10818054, ], 
+              "CMS 2014 General Payments Details - Product Info.csv", append = TRUE, sep = ",", row.names = FALSE)
+}
+
+write_genpay4(genpay_prod)
