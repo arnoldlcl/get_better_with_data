@@ -2,8 +2,12 @@ setwd("D:/GBWD")
 
 library(data.table)
 
-genpay <- fread("CMS 2014/CMS 2014 General Payments Details.csv", colClasses = c(rep("character", 23), rep("NULL", 6), "character", rep("NULL", 33)))
-genpay_phys <- genpay[Teaching_Hospital_ID == "", ]
+# Read the following columns of the General Payments 
+genpay_physinfo <- fread("CMS 2014/CMS 2014 General Payments Details.csv", 
+                         colClasses = c("NULL", "character", "NULL", "character", rep("NULL", 6),
+                                        rep("character", 4), rep("NULL", 2), rep("character", 2),
+                                        rep("NULL", 45)))
+genpay_phys_US <- genpay_phys[Recipient_Country == "United States", ]
 
 write_genpay_phys <- function(genpay_phys) {
   for(i in 1:107) {
