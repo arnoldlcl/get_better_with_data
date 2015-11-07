@@ -8,14 +8,11 @@ conn_cms <- dbConnect(MySQL(), user = "data_hacker",
                       password = "hack_pw",
                       port = 3306)
 
-result <- dbGetQuery(conn_cms, "select distinct(cms2013.Recipient_State), avg(cms2013.Total_Amount_of_Payment_USDollars)
-                                from CMS_open_payments_2013.general_payment_data cms2013
-                                where cms2013.Physician_Specialty like '%Allopathic%'
-                                group by cms2013.Physician_Specialty, cms2013.Recipient_State;")
+teaching_hospitals <- dbGetQuery(conn_cms, "select *
+                                 from CMS_open_payments_2014.general_payment_data cms2014
+                                 where cms2014.Teaching_Hospital_ID IS NOT NULL;")
 
-result2 <- dbGetQuery(conn_cms, "select *
-                                 from CMS_open_payments_2013.general_payment_data cms2013
-                                 where cms2013.Teaching_Hospital_ID IS NOT NULL;")
+write.csv(teaching_hospitals, "CMS 2014 General Payments - Teaching Hospitals.csv")
 
 dbDisconnect(conn_cms)
 rm(conn_cms)
