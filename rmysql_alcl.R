@@ -43,10 +43,10 @@ genpay_phys[, Teaching_Hospital_ID := NULL] # Drop the Teaching_Hospital_ID colu
 write_genpay <- function(d) {
   for(i in 0:106) {
     write.table(d[((i * 100000) + 1):((i + 1) * 100000)], 
-                "CMS 2014 General Payments Details - Physician Info.csv", append = TRUE, sep = ",")
+                "CMS 2014 General Payments Details - Physician Info.csv", append = TRUE, sep = ",", row.names = FALSE)
   }
   write.table(d[10700001:10768319, ], 
-                "CMS 2014 General Payments Details - Physician Info.csv", append = TRUE, sep = ",")
+              "CMS 2014 General Payments Details - Physician Info.csv", append = TRUE, sep = ",", row.names = FALSE)
 }
 
 write_genpay(genpay_phys) # Write the physician info table to disk
@@ -91,3 +91,14 @@ genpay_trans <- fread("CMS 2014/CMS 2014 General Payments Details.csv",
                                      "character", rep("NULL", 19)))
 
 # Ad hoc function to write genpay_trans to a new .csv file, in chunks
+
+write_genpay2 <- function(d) {
+  for(i in 0:107) {
+    write.table(d[((i * 100000) + 1):((i + 1) * 100000)], 
+                "CMS 2014 General Payments Details - Transaction Info.csv", append = TRUE, sep = ",", row.names = FALSE)
+  }
+  write.table(d[10800001:10818054, ], 
+              "CMS 2014 General Payments Details - Transaction Info.csv", append = TRUE, sep = ",", row.names = FALSE)
+}
+
+write_genpay2(genpay_trans)
