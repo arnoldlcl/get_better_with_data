@@ -1,6 +1,4 @@
-test <- read.csv("PGYR14_P063015/OP_DTL_GNRL_PGYR2014_P06302015.csv", nrow = 100)
-
-install.packages("RMySQL")
+genpay <- read.csv("CMS 2014/CMS 2014 General Payments Details.csv", nrow = 100)
 
 library(RMySQL)
 conn_cms <- dbConnect(MySQL(), user = "data_hacker", 
